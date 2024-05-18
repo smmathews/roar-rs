@@ -1,8 +1,10 @@
-# Roar
+# Build
+cargo build --release
+# Run
 ## rnd
 ### help
 ```
-> rnd --help
+> target/release/rnd --help
 Creates a randomized roaring bitmap, with a set number of bits
 
 Usage: rnd [OPTIONS] --set-bits <SET_BITS>
@@ -16,12 +18,12 @@ Options:
 ```
 ### create, with progress bar and send output to stdout
 ```
-> rnd --set-bits 10                       
+> target/release/rnd --set-bits 10                       
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████ 1000000000/1000000000:0
  ��T&8XZ\^`bdfhj        O��:��\��#]��8_�%  
 ```
 ### create, without progress bar and send to file > out.roar
 ```
-> rnd --set-bits 10 --disable-progress-bar > out.roar
+> target/release/rnd --set-bits 10 --disable-progress-bar > out.roar
 >
 ```
