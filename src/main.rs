@@ -12,15 +12,15 @@ impl Action {
     fn execute(&self, mut arg_iter: Args) {
         match self {
             Action::CreateRandomShuffle => {
-                let set_bits = arg_iter.next().expect("no set_bits given");
-                let max_bits = arg_iter.next().expect("no max_bits given");
+                let set_bits = u32::from_str(arg_iter.next().expect("no set_bits given").as_str()).unwrap();
+                let max_bits = u32::from_str(arg_iter.next().expect("no max_bits given").as_str()).unwrap();
                 let file_name = arg_iter.next().expect("no file_name given");
 
                 if file_name == "--" {
                     println!("creating a roaring bitmap with {set_bits} bits set in {max_bits} and forward")
                 } else {
-                    let path = PathBuf::from_str(file_name.as_str());
-                    println!("creating a roaring bitmap with {set_bits} bits set in {max_bits} and save to {:?}", path.unwrap())
+                    let path = PathBuf::from_str(file_name.as_str()).unwrap();
+                    println!("creating a roaring bitmap with {set_bits} bits set in {max_bits} and save to {:?}", path)
                 }
             }
         }
