@@ -42,7 +42,7 @@ fn main() {
         pb.inc(1);
     }
 
+    pb.finish();
     bitmap.serialize_into(io::stdout()).unwrap();
-
     std::process::exit(exit_code::SUCCESS);
 }
