@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-strum = "0.26.2"
-strum_macros = "0.26.2"
 roaring = "0.10.4"
 rand = "0.8.5"
+clap = { version = "4.5.4", features = ["derive"] }
+exit-code = "1.0.0"
+indicatif = "0.17.8"
