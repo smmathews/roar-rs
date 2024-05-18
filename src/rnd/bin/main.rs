@@ -1,5 +1,5 @@
-use std::io;
-use roaring::RoaringBitmap;
+use std::io::{stdout, Write};
+use croaring::Bitmap;
 use rand::Rng;
 use clap::Parser;
 use indicatif::ProgressBar;
@@ -18,7 +18,11 @@ struct Args {
 
     /// disables displaying the progress bar as we build the randomized bitmap
     #[arg(short, long, default_value_t = false)]
-    disable_progress_bar: bool
+    disable_progress_bar: bool,
+
+    /// if enabled, serialization will be more efficient, but can't be imported with java/go
+    #[arg(short, long, default_value_t = false)]
+    native_serialization: bool
 }
 
 trait ProgressOutput {
@@ -60,9 +64,8 @@ fn create_progress_output(args: &Args) -> Box<dyn ProgressOutput> {
 fn main() {
     let args = Args::parse();
 
-    let mut bitmap = RoaringBitmap::new();
     // add 0 through set_bits-1
-    bitmap.insert_range(0..args.set_bits);
+    let mut bitmap = Bitmap::from_range(0..args.set_bits);
 
     let progress_output = create_progress_output(&args);
 
@@ -74,17 +77,23 @@ fn main() {
         let jb = bitmap.contains(j);
         let ib = bitmap.contains(i);
         if jb && !ib {
-            bitmap.insert(i);
+            bitmap.add(i);
             bitmap.remove(j);
         } else if ib && !jb {
-            bitmap.insert(j);
+            bitmap.add(j);
             bitmap.remove(i);
         }
         progress_output.incr();
     }
 
     progress_output.finish();
-    // TODO: invoke run_optimize when https://github.com/RoaringBitmap/roaring-rs/issues/12 is addressed
-    bitmap.serialize_into(io::stdout()).unwrap();
+    bitmap.run_optimize();
+    let mut buffer = vec![];
+    if args.native_serialization {
+        bitmap.serialize_into::<croaring::Native>(&mut buffer);
+    } else {
+        bitmap.serialize_into::<croaring::Portable>(&mut buffer);
+    }
+    stdout().write_all(&*buffer).unwrap();
     std::process::exit(exit_code::SUCCESS);
 }

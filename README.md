@@ -12,7 +12,8 @@ Usage: rnd [OPTIONS] --set-bits <SET_BITS>
 Options:
   -s, --set-bits <SET_BITS>   Number of bits to set in the bitmap
   -m, --max-bits <MAX_BITS>   max number of total bits, set or unset, in the bitmap [default: 1000000000]
-  -d, --disable-progress-bar  display the progress bar as we build the randomized bitmap
+  -d, --disable-progress-bar  disables displaying the progress bar as we build the randomized bitmap
+  -n, --native-serialization  if enabled, serialization will be more efficient, but can't be imported with java/go
   -h, --help                  Print help
   -V, --version               Print version
 ```
