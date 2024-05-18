@@ -88,7 +88,12 @@ fn main() {
 
     progress_output.finish();
     bitmap.run_optimize();
-    let mut buffer = vec![];
+    let size = if args.native_serialization {
+        bitmap.get_serialized_size_in_bytes::<croaring::Native>()
+    } else {
+        bitmap.get_serialized_size_in_bytes::<croaring::Portable>()
+    };
+    let mut buffer = Vec::with_capacity(size);
     if args.native_serialization {
         bitmap.serialize_into::<croaring::Native>(&mut buffer);
     } else {
