@@ -1,5 +1,5 @@
 use std::io::{stdout, Write};
-use croaring::Bitmap;
+use croaring::{Bitmap, Native, Portable};
 use rand::Rng;
 use clap::Parser;
 use indicatif::ProgressBar;
@@ -89,15 +89,15 @@ fn main() {
     progress_output.finish();
     bitmap.run_optimize();
     let size = if args.native_serialization {
-        bitmap.get_serialized_size_in_bytes::<croaring::Native>()
+        bitmap.get_serialized_size_in_bytes::<Native>()
     } else {
-        bitmap.get_serialized_size_in_bytes::<croaring::Portable>()
+        bitmap.get_serialized_size_in_bytes::<Portable>()
     };
     let mut buffer = Vec::with_capacity(size);
     if args.native_serialization {
-        bitmap.serialize_into::<croaring::Native>(&mut buffer);
+        bitmap.serialize_into::<Native>(&mut buffer);
     } else {
-        bitmap.serialize_into::<croaring::Portable>(&mut buffer);
+        bitmap.serialize_into::<Portable>(&mut buffer);
     }
     stdout().write_all(&*buffer).unwrap();
     std::process::exit(exit_code::SUCCESS);
