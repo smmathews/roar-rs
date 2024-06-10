@@ -67,7 +67,7 @@ fn main() {
     // add 0 through set_bits-1
     let mut bitmap = Bitmap::from_range(0..args.set_bits);
 
-    let progress_output = create_progress_output(&args);
+    let progress_output = &*create_progress_output(&args);
 
     // randomly shuffle those values throughout the max_bits
     // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
